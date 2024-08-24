@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Heart Disease Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;  /* Add padding to the body */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;  /* Align items at the start to provide space at the top */
+            height: 100vh;
+            box-sizing: border-box;  /* Ensure padding is included in the element's total width and height */
+            overflow-y: auto;  /* Add vertical scrolling */
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;  /* Limit the maximum width of the container */
+            text-align: center;
+            box-sizing: border-box;  /* Ensure padding is included in the element's total width and height */
+            margin-top: 50px;  /* Add margin to the top to ensure visibility */
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;  /* Add margin to separate the title from the form */
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            text-align: left;
+        }
+        input[type="number"], input[type="submit"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;  /* Ensure padding is included in the element's total width and height */
+        }
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        .result h2 {
+            color: #333;
+        }
+        .result ul {
+            list-style: none;
+            padding: 0;
+        }
+        .result ul li {
+            background-color: #e0ffe0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+    </style>
+    <script>
+        function showResult(result) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<h2>Prediction: ${result.prediction ? 'High Risk' : 'Low Risk'}</h2>`;
+            if (result.recommendations.length > 0) {
+                resultDiv.innerHTML += '<h3>Recommendations:</h3><ul>';
+                result.recommendations.forEach(rec => {
+                    resultDiv.innerHTML += `<li>${rec}</li>`;
+                });
+                resultDiv.innerHTML += '</ul>';
+            }
+        }
+
+        async function submitForm(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            });
+            const result = await response.json();
+            showResult(result);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Heart Disease Prediction</h1>
+        <form onsubmit="submitForm(event)">
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="anaemia">Anaemia (0 or 1):</label>
+            <input type="number" id="anaemia" name="anaemia" required>
+
+            <label for="creatinine_phosphokinase">Creatinine Phosphokinase:</label>
+            <input type="number" id="creatinine_phosphokinase" name="creatinine_phosphokinase" required>
+
+            <label for="diabetes">Diabetes (0 or 1):</label>
+            <input type="number" id="diabetes" name="diabetes" required>
+
+            <label for="ejection_fraction">Ejection Fraction:</label>
+            <input type="number" id="ejection_fraction" name="ejection_fraction" required>
+
+            <label for="high_blood_pressure">High Blood Pressure (0 or 1):</label>
+            <input type="number" id="high_blood_pressure" name="high_blood_pressure" required>
+
+            <label for="platelets">Platelets:</label>
+            <input type="number" id="platelets" name="platelets" required>
+
+            <label for="serum_creatinine">Serum Creatinine:</label>
+            <input type="number" id="serum_creatinine" name="serum_creatinine" required>
+
+            <label for="serum_sodium">Serum Sodium:</label>
+            <input type="number" id="serum_sodium" name="serum_sodium" required>
+
+            <label for="sex">Sex (1 for male, 0 for female):</label>
+            <input type="number" id="sex" name="sex" required>
+
+            <label for="smoking">Smoking (0 or 1):</label>
+            <input type="number" id="smoking" name="smoking" required>
+
+            <label for="time">Time:</label>
+            <input type="number" id="time" name="time" required>
+
+            <input type="submit" value="Predict">
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+</body>
+</html>
